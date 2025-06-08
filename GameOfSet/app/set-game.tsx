@@ -48,7 +48,7 @@ export default function SetGameScreen() {
       </View>
       
       <Text className="text-md text-center text-muted-foreground mb-8">Cards Remaining: {game.cardsRemaining()}</Text>
-      <Text className="text-lg text-center mb-8 text-muted-foreground">
+      <Text className="text-lg text-center mb-8 text-muted-foreground" style={{ minHeight: 32 }}>
         {feedback}
       </Text>
       <Text className="text-lg font-bold text-center">Score:</Text>
