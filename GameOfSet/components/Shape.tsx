@@ -14,8 +14,8 @@ const Shape = ({
   const shapeWidth = 60;
   const shapeHeight = 40;
   const isStriped = shading === 'striped';
-  const fill = shading === 'solid' ? color : isStriped ? 'url(#stripes)' : 'none';
-  const stroke = color;
+  const patternId = `stripes-${color.replace('#', '')}`;
+  const fill = shading === 'solid' ? color : isStriped ? `url(#${patternId})` : 'none';
 
   return (
     <View>
@@ -23,7 +23,7 @@ const Shape = ({
         {isStriped && (
           <Defs>
             <Pattern
-              id="stripes"
+              id={patternId}
               patternUnits="userSpaceOnUse"
               width="4"
               height="4"
@@ -43,7 +43,7 @@ const Shape = ({
             width={50}
             height={20}
             fill={fill}
-            stroke={stroke}
+            stroke={color}
             strokeWidth="2"
           />
         )}
@@ -56,7 +56,7 @@ const Shape = ({
               5,${shapeHeight / 2}
             `}
             fill={fill}
-            stroke={stroke}
+            stroke={color}
             strokeWidth="2"
           />
         )}
@@ -74,7 +74,7 @@ const Shape = ({
               Z
             `}
             fill={fill}
-            stroke={stroke}
+            stroke={color}
             strokeWidth="2"
           />
         )}
