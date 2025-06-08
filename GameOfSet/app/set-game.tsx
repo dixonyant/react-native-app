@@ -3,10 +3,12 @@ import { View, Text, ScrollView } from 'react-native';
 import { SetGameInteractive } from '@/classes/SetGameInteractive';
 import SetGameCard from '@/components/SetGameCard';
 import SetGameButton from '@/components/SetGameButton';
+import Timer from '@/components/Timer';
 
 const game = new SetGameInteractive();
 
 export default function SetGameScreen() {
+  const [timerKey, setTimerKey] = useState(0);
   const [cards, setCards] = useState(() => game.dealRandom());
   const [feedback, setFeedback] = useState('');
   const [score, setScore] = useState(() => game.getScore());
@@ -18,10 +20,21 @@ export default function SetGameScreen() {
     setCards(game.dealRandom());
   };
 
+  const resetGame = () => {
+    game.reset();
+    setFeedback('');
+    setScore(game.getScore());
+    setCards(game.dealRandom());
+    setTimerKey(prevKey => prevKey + 1); // Reset timer by changing key
+  };
+
   return (
     <View className="flex-1 px-5 py-6 bg-background">
-      <Text className="text-lg font-bold text-foreground mb-2">Guess if this is a Set:</Text>
-      <View className="h-64">
+      <View className="flex-row items-center justify-end">
+        <Timer key={timerKey} />
+      </View>
+      <Text className="text-lg font-bold text-center mt-4 mb-4">Is this is a Set?</Text>
+      <View className="h-48">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -33,23 +46,20 @@ export default function SetGameScreen() {
           ))}
         </ScrollView>
       </View>
+      
+      <Text className="text-md text-center text-muted-foreground mb-8">Cards Remaining: {game.cardsRemaining()}</Text>
+      <Text className="text-lg text-center mb-8 text-muted-foreground">
+        {feedback}
+      </Text>
+      <Text className="text-lg font-bold text-center">Score:</Text>
+      <Text className="text-md text-center text-muted-foreground mb-12">{score}</Text>
 
       <View className="flex-row justify-around my-3">
-        <SetGameButton title="It's a Set" disabled={!cards?.length} handlePress={() => handleGuess(true)} containerStyles="flex-1 mx-2"/>
-        <SetGameButton title="Not a Set" disabled={!cards?.length}  handlePress={() => handleGuess(false)} containerStyles='flex-1 mx-2'/>
+        <SetGameButton title="It's a Set" disabled={!cards?.length} handlePress={() => handleGuess(true)} containerStyles="flex-1 mx-2" />
+        <SetGameButton title="Not a Set" disabled={!cards?.length} handlePress={() => handleGuess(false)} containerStyles='flex-1 mx-2' />
       </View>
-
-      <Text className="text-lg text-center mb-2 text-muted-foreground">{feedback}</Text>
-      <Text className="text-base text-center text-muted-foreground">Score: {score}</Text>
-      <Text className="text-sm text-center text-muted-foreground mt-2">Cards Remaining: {game.cardsRemaining()}</Text>
-
       <View className="mt-4">
-        <SetGameButton title="Reset Game" handlePress={() => {
-          game.reset();
-          setFeedback('');
-          setScore(game.getScore());
-          setCards(game.dealRandom());
-        }} />
+        <SetGameButton title="Reset Game" handlePress={() => resetGame()} />
       </View>
     </View>
   );
