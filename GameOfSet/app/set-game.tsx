@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, Button, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { SetGameInteractive } from '@/classes/SetGameInteractive';
 import SetGameCard from '@/components/SetGameCard';
+import SetGameButton from '@/components/SetGameButton';
 
 const game = new SetGameInteractive();
 
 export default function SetGameScreen() {
-  const [cards, setCards] = useState(game.dealCards());
+  const [cards, setCards] = useState(() => game.dealRandom());
   const [feedback, setFeedback] = useState('');
-  const [score, setScore] = useState(game.getScore());
+  const [score, setScore] = useState(() => game.getScore());
 
   const handleGuess = (guess: boolean) => {
     const result = game.checkUserAssertion(guess);
     setFeedback(result ? '✅ Correct!' : '❌ Wrong!');
     setScore(game.getScore());
-    setCards(game.dealCards());
+    setCards(game.dealRandom());
   };
 
   return (
@@ -34,8 +35,8 @@ export default function SetGameScreen() {
       </View>
 
       <View className="flex-row justify-around my-3">
-        <Button title="It's a Set" disabled={!cards?.length} onPress={() => handleGuess(true)} />
-        <Button title="Not a Set" disabled={!cards?.length}  onPress={() => handleGuess(false)} />
+        <SetGameButton title="It's a Set" disabled={!cards?.length} handlePress={() => handleGuess(true)} containerStyles="flex-1 mx-2"/>
+        <SetGameButton title="Not a Set" disabled={!cards?.length}  handlePress={() => handleGuess(false)} containerStyles='flex-1 mx-2'/>
       </View>
 
       <Text className="text-lg text-center mb-2 text-muted-foreground">{feedback}</Text>
@@ -43,10 +44,11 @@ export default function SetGameScreen() {
       <Text className="text-sm text-center text-muted-foreground mt-2">Cards Remaining: {game.cardsRemaining()}</Text>
 
       <View className="mt-4">
-        <Button title="Reset Game" onPress={() => {
+        <SetGameButton title="Reset Game" handlePress={() => {
           game.reset();
           setFeedback('');
           setScore(game.getScore());
+          setCards(game.dealRandom());
         }} />
       </View>
     </View>
