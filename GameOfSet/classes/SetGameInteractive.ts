@@ -9,11 +9,13 @@ export class SetGameInteractive extends SetGame {
 
   constructor() {
     super();
-    this.dealCards(); // Deal the first set of cards
+    console.log(this.cardsRemaining(), "cards remaining in the deck");
   }
 
   public dealCards(): Card[] {
+    console.log(this.deck);
     this.dealtCards = this.deck.splice(0, 3);
+    console.log(this.dealtCards, "dealt cards");
     this.dealtIsSet = this.isSet(this.dealtCards);
     return this.dealtCards;
   }
@@ -40,7 +42,6 @@ export class SetGameInteractive extends SetGame {
     this.dealtIsSet = false;
     this.correctGuesses = 0;
     this.incorrectGuesses = 0;
-    this.dealCards();
   }
 
 }
