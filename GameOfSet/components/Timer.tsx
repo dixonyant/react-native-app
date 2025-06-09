@@ -1,28 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text } from 'react-native';
 
-const Timer = () => {
+const Timer = ({ running = true }: { running?: boolean }) => {
   const [seconds, setSeconds] = useState(0);
   const intervalRef = useRef<any>(null);
-  // const [milliseconds, setMilliseconds] = useState(0);
-  // const milIntervalRef = useRef<any>(null);
 
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setSeconds((prev) => prev + 1);
-    }, 1000);
+    if (running) {
+      intervalRef.current = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+      }, 1000);
+    } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, []);
-  // useEffect(() => {
-  //   milIntervalRef.current = setInterval(() => {
-  //     setMilliseconds((prev) => prev + 1);
-  //   }, 1);
-  //   return () => {
-  //     if (milIntervalRef.current) clearInterval(milIntervalRef.current);
-  //   };
-  // }, []);
+  }, [running]);
+
+  useEffect(() => {
+    setSeconds(0);
+  }, []); // reset on mount (or can be controlled by key prop)
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60).toString().padStart(2, '0');
