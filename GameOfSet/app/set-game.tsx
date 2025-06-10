@@ -41,7 +41,7 @@ export default function SetGameScreen() {
         <Timer key={timerKey} running={timerRunning} />
       </View>
       <Text className="text-lg font-bold text-center mt-4 mb-8">Is this is a Set?</Text>
-      <View className="h-48">
+      <View className="h-56">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
